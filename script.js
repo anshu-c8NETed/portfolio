@@ -1,4 +1,3 @@
-// Animated Background Canvas
 const canvas = document.getElementById('bg-canvas');
 const ctx = canvas.getContext('2d');
 
@@ -67,7 +66,6 @@ window.addEventListener('resize', () => {
   canvas.height = window.innerHeight;
 });
 
-// Initialize Locomotive Scroll
 let scroll;
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -83,13 +81,11 @@ document.addEventListener('DOMContentLoaded', function() {
     scroll.update();
   });
 
-  // Trigger animations after scroll is initialized
   setTimeout(() => {
     firstPageAnim();
   }, 100);
 });
 
-// First Page Animation
 function firstPageAnim() {
   const tl = gsap.timeline();
 
@@ -113,7 +109,6 @@ function firstPageAnim() {
   }, "-=0.5");
 }
 
-// Custom Cursor Follower
 const cursorFollower = document.querySelector("#cursor-follower");
 let mouseX = 0, mouseY = 0;
 let followerX = 0, followerY = 0;
@@ -136,7 +131,7 @@ function animateFollower() {
 
 animateFollower();
 
-// Cursor interaction with links
+
 document.querySelectorAll('a, .elem, .skill-card').forEach(elem => {
   elem.addEventListener('mouseenter', () => {
     if (cursorFollower) {
@@ -159,7 +154,7 @@ document.querySelectorAll('a, .elem, .skill-card').forEach(elem => {
   });
 });
 
-// Menu Button Animation and Functionality
+
 const menuBtn = document.querySelector('.menu-btn');
 const dropdownMenu = document.getElementById('dropdown-menu');
 const closeMenuBtn = document.querySelector('.close-menu');
@@ -196,7 +191,6 @@ if (menuOverlay) {
   menuOverlay.addEventListener('click', closeMenu);
 }
 
-// Close menu when clicking on a link
 menuLinks.forEach(link => {
   link.addEventListener('click', (e) => {
     e.preventDefault();
@@ -215,14 +209,13 @@ menuLinks.forEach(link => {
   });
 });
 
-// Close menu on escape key
+
 document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape' && dropdownMenu.classList.contains('active')) {
     closeMenu();
   }
 });
 
-// Project Image Hover Effect
 document.querySelectorAll(".elem").forEach(function (elem) {
   const img = elem.querySelector("img");
   let rotate = 0;
@@ -256,7 +249,6 @@ document.querySelectorAll(".elem").forEach(function (elem) {
   });
 });
 
-// Skill Cards Animation on Scroll
 if (typeof IntersectionObserver !== 'undefined') {
   const skillObserver = new IntersectionObserver((entries) => {
     entries.forEach((entry, index) => {
@@ -279,7 +271,6 @@ if (typeof IntersectionObserver !== 'undefined') {
   });
 }
 
-// Smooth Scroll Links
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
   anchor.addEventListener('click', function (e) {
     // Skip if it's a menu link (already handled above)
@@ -316,7 +307,7 @@ function updateTime() {
 }
 
 updateTime();
-setInterval(updateTime, 60000); // Update every minute
+setInterval(updateTime, 60000); 
 
 // Parallax effect on scroll
 if (scroll) {
@@ -329,7 +320,7 @@ if (scroll) {
       hero.style.transform = `translateY(${scrollY * 0.5}px)`;
     }
     
-    // Fade out effect for hero footer
+
     const heroFooter = document.querySelector('#herofooter');
     if (heroFooter) {
       const opacity = Math.max(0, 1 - scrollY / 500);
@@ -338,7 +329,6 @@ if (scroll) {
   });
 }
 
-// Add subtle animation to gradient text
 gsap.to('.gradient-text', {
   backgroundPosition: '200% center',
   duration: 3,
@@ -368,7 +358,6 @@ if (typeof IntersectionObserver !== 'undefined') {
   });
 }
 
-// About section animation
 if (typeof IntersectionObserver !== 'undefined') {
   const aboutObserver = new IntersectionObserver((entries) => {
     entries.forEach((entry) => {
