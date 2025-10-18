@@ -24,7 +24,6 @@ body {
   overflow-x: hidden;
 }
 
-/* Animated Background Canvas */
 #bg-canvas {
   position: fixed;
   top: 0;
@@ -55,7 +54,6 @@ body {
   mix-blend-mode: difference;
 }
 
-/* Hero Section */
 #hero {
   width: 100%;
   min-height: 100vh;
@@ -135,7 +133,6 @@ body {
   transform: rotate(-45deg) translate(8px, -8px);
 }
 
-/* Dropdown Menu */
 #dropdown-menu {
   position: fixed;
   top: 0;
@@ -548,7 +545,6 @@ body {
   border: 1px solid var(--border-color);
 }
 
-/* Skills Section */
 #skills {
   padding: 150px 60px;
   background: radial-gradient(ellipse at center, rgba(139, 92, 246, 0.05), transparent 70%);
@@ -613,7 +609,6 @@ body {
   z-index: 1;
 }
 
-/* About Section */
 #about {
   display: flex;
   align-items: center;
@@ -729,7 +724,6 @@ body {
   box-shadow: 0 15px 40px rgba(99, 102, 241, 0.5);
 }
 
-/* Footer */
 #footer {
   padding: 60px 60px 40px;
   background: rgba(5, 5, 5, 0.8);
@@ -781,7 +775,6 @@ body {
   height: 20px;
 }
 
-/* Responsive Design */
 @media (max-width: 1024px) {
   #nav, #heading, #smallheading, #herofooter {
     padding-left: 40px;
@@ -973,7 +966,7 @@ body {
   .menu-content {
     padding: 30px 20px;
   }
-
+  
   .menu-link {
     font-size: 20px;
     gap: 15px;
