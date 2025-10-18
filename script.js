@@ -388,3 +388,22 @@ if (typeof IntersectionObserver !== 'undefined') {
     aboutObserver.observe(aboutSection);
   }
 }
+
+document.querySelectorAll(".elem").forEach(function (elem) {
+  elem.addEventListener("click", function() {
+    const projectTitle = elem.querySelector("h1");
+    if (projectTitle) {
+      const title = projectTitle.textContent.trim();
+      
+      if (title === "SHANSCAFE") {
+        window.open("https://shanscafe.netlify.app/", "_blank");
+      } else if (title === "PINSPIRE") {
+        window.open("https://your-pinspire-url.com/", "_blank");
+      } else if (title === "CARSMANIA") {
+        window.open("https://your-carsmania-url.com/", "_blank");
+      }
+    }
+  });
+
+  elem.style.cursor = "pointer";
+});
