@@ -24,6 +24,7 @@ body {
   overflow-x: hidden;
 }
 
+/* Animated Background Canvas */
 #bg-canvas {
   position: fixed;
   top: 0;
@@ -133,6 +134,7 @@ body {
   transform: rotate(-45deg) translate(8px, -8px);
 }
 
+/* Dropdown Menu */
 #dropdown-menu {
   position: fixed;
   top: 0;
@@ -238,7 +240,7 @@ body {
   padding: 20px 0;
   color: var(--text-light);
   text-decoration: none;
-  font-size: 32px;
+  font-size: 28px;
   font-weight: 600;
   font-family: 'Space Grotesk', sans-serif;
   border-bottom: 1px solid var(--border-color);
@@ -257,6 +259,7 @@ body {
 #dropdown-menu.active .menu-link:nth-child(3) { transition-delay: 0.2s; }
 #dropdown-menu.active .menu-link:nth-child(4) { transition-delay: 0.25s; }
 #dropdown-menu.active .menu-link:nth-child(5) { transition-delay: 0.3s; }
+#dropdown-menu.active .menu-link:nth-child(6) { transition-delay: 0.35s; }
 
 .menu-link:hover {
   padding-left: 20px;
@@ -440,6 +443,13 @@ body {
   50% { transform: translateY(5px); }
 }
 
+/* Agency Projects Section */
+#agency-projects {
+  padding: 150px 60px;
+  min-height: 100vh;
+  background: radial-gradient(ellipse at top left, rgba(139, 92, 246, 0.05), transparent 60%);
+}
+
 /* Projects Section */
 #second {
   padding: 150px 60px;
@@ -545,6 +555,7 @@ body {
   border: 1px solid var(--border-color);
 }
 
+/* Skills Section */
 #skills {
   padding: 150px 60px;
   background: radial-gradient(ellipse at center, rgba(139, 92, 246, 0.05), transparent 70%);
@@ -609,6 +620,7 @@ body {
   z-index: 1;
 }
 
+/* About Section */
 #about {
   display: flex;
   align-items: center;
@@ -724,6 +736,7 @@ body {
   box-shadow: 0 15px 40px rgba(99, 102, 241, 0.5);
 }
 
+/* Footer */
 #footer {
   padding: 60px 60px 40px;
   background: rgba(5, 5, 5, 0.8);
@@ -775,13 +788,14 @@ body {
   height: 20px;
 }
 
+/* Responsive Design */
 @media (max-width: 1024px) {
   #nav, #heading, #smallheading, #herofooter {
     padding-left: 40px;
     padding-right: 40px;
   }
 
-  #second, #skills, #about, #footer {
+  #agency-projects, #second, #skills, #about, #footer {
     padding-left: 40px;
     padding-right: 40px;
   }
@@ -825,7 +839,7 @@ body {
     padding-right: 25px;
   }
 
-  #second, #skills, #about, #footer {
+  #agency-projects, #second, #skills, #about, #footer {
     padding-left: 25px;
     padding-right: 25px;
   }
@@ -915,7 +929,7 @@ body {
     padding-right: 20px;
   }
 
-  #second, #skills, #about, #footer {
+  #agency-projects, #second, #skills, #about, #footer {
     padding-left: 20px;
     padding-right: 20px;
   }
@@ -966,7 +980,7 @@ body {
   .menu-content {
     padding: 30px 20px;
   }
-  
+
   .menu-link {
     font-size: 20px;
     gap: 15px;
