@@ -399,11 +399,12 @@ document.querySelectorAll(".elem").forEach(function (elem) {
         window.open("https://shanscafe.netlify.app/", "_blank");
       } else if (title === "PINSPIRE") {
         window.open("https://your-pinspire-url.com/", "_blank");
-      } else if (title === "CARSMANIA") {
-        window.open("https://your-carsmania-url.com/", "_blank");
+      } else if (title === "NEXUS") {
+        window.open("https://nexusonweb.netlify.app/", "_blank");
       }
     }
   });
 
   elem.style.cursor = "pointer";
 });
+
