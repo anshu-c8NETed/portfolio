@@ -141,28 +141,29 @@ class LoaderController {
         // Re-enable scrolling
         document.body.style.overflow = '';
         
-        // Show main content
+        // Show main content with smooth transition
         const main = document.getElementById('main');
         if (main) {
+          main.style.transition = 'opacity 0.5s ease';
           main.style.opacity = '1';
         }
         
-        // Trigger page animations
+        // Trigger page animations after content is visible
         this.triggerPageAnimations();
       }, 800);
-    }, 300);
+    }, 500);
   }
 
   triggerPageAnimations() {
     // Dispatch custom event
     window.dispatchEvent(new CustomEvent('loaderComplete'));
     
-    // Directly trigger firstPageAnim if it exists
+    // Wait for DOM to be ready, then trigger animations
     setTimeout(() => {
       if (typeof firstPageAnim === 'function') {
         firstPageAnim();
       }
-    }, 100);
+    }, 500);
   }
 }
 
