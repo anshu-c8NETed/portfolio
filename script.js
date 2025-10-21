@@ -74,7 +74,14 @@ document.addEventListener('DOMContentLoaded', function() {
     smooth: true,
     smoothMobile: false,
     resetNativeScroll: true,
-    lerp: 0.1
+    lerp: 0.1,
+    multiplier: 1,
+    smartphone: {
+      smooth: false
+    },
+    tablet: {
+      smooth: false
+    }
   });
 
   window.addEventListener('resize', () => {
@@ -131,7 +138,6 @@ function animateFollower() {
 
 animateFollower();
 
-
 document.querySelectorAll('a, .elem, .skill-card').forEach(elem => {
   elem.addEventListener('mouseenter', () => {
     if (cursorFollower) {
@@ -154,7 +160,6 @@ document.querySelectorAll('a, .elem, .skill-card').forEach(elem => {
   });
 });
 
-
 const menuBtn = document.querySelector('.menu-btn');
 const dropdownMenu = document.getElementById('dropdown-menu');
 const closeMenuBtn = document.querySelector('.close-menu');
@@ -165,12 +170,14 @@ function openMenu() {
   menuBtn.classList.add('active');
   dropdownMenu.classList.add('active');
   document.body.style.overflow = 'hidden';
+  if (scroll) scroll.stop();
 }
 
 function closeMenu() {
   menuBtn.classList.remove('active');
   dropdownMenu.classList.remove('active');
   document.body.style.overflow = '';
+  if (scroll) scroll.start();
 }
 
 if (menuBtn) {
@@ -208,7 +215,6 @@ menuLinks.forEach(link => {
     }, 500);
   });
 });
-
 
 document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape' && dropdownMenu.classList.contains('active')) {
@@ -273,7 +279,6 @@ if (typeof IntersectionObserver !== 'undefined') {
 
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
   anchor.addEventListener('click', function (e) {
-    // Skip if it's a menu link (already handled above)
     if (this.classList.contains('menu-link')) {
       return;
     }
@@ -290,7 +295,6 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
   });
 });
 
-// Update Time Function
 function updateTime() {
   const now = new Date();
   const timeString = now.toLocaleTimeString('en-IN', {
@@ -309,25 +313,8 @@ function updateTime() {
 updateTime();
 setInterval(updateTime, 60000); 
 
-// Parallax effect on scroll
-if (scroll) {
-  scroll.on('scroll', (args) => {
-    const scrollY = args.scroll.y;
-    
-    // Parallax for hero section
-    const hero = document.querySelector('#hero');
-    if (hero) {
-      hero.style.transform = `translateY(${scrollY * 0.5}px)`;
-    }
-    
-
-    const heroFooter = document.querySelector('#herofooter');
-    if (heroFooter) {
-      const opacity = Math.max(0, 1 - scrollY / 500);
-      heroFooter.style.opacity = opacity;
-    }
-  });
-}
+// REMOVED PARALLAX CODE - IT WAS CAUSING THE COLLAPSING ISSUE
+// Locomotive Scroll handles smooth scrolling without extra transforms
 
 gsap.to('.gradient-text', {
   backgroundPosition: '200% center',
@@ -337,7 +324,6 @@ gsap.to('.gradient-text', {
   yoyo: true
 });
 
-// Project cards stagger animation on scroll
 if (typeof IntersectionObserver !== 'undefined') {
   const projectObserver = new IntersectionObserver((entries) => {
     entries.forEach((entry) => {
@@ -401,11 +387,9 @@ document.querySelectorAll(".elem").forEach(function (elem) {
         window.open("https://your-pinspire-url.com/", "_blank");
       } else if (title === "NEXUS") {
         window.open("https://nexusonweb.netlify.app/", "_blank");
-      }
-      else if (title === "LAZAREV.") {
+      } else if (title === "LAZAREV.") {
         window.open("https://lazarevdigital.netlify.app/", "_blank");
-      }
-      else if (title === "SUNSTUDIO") {
+      } else if (title === "SUNSTUDIO") {
         window.open("https://sunstudioonweb.netlify.app/", "_blank");
       }
     }
@@ -413,5 +397,3 @@ document.querySelectorAll(".elem").forEach(function (elem) {
 
   elem.style.cursor = "pointer";
 });
-
-
