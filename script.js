@@ -531,3 +531,130 @@ document.querySelectorAll(".elem").forEach(function (elem) {
 
   elem.style.cursor = "pointer";
 });
+
+// ====== WEB3FORMS CONTACT FORM ======
+const contactForm = document.getElementById('contactForm');
+
+if (contactForm) {
+  contactForm.addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    const formData = new FormData(contactForm);
+    const data = Object.fromEntries(formData);
+    
+    // Validation
+    if (!data.name || !data.email || !data.message) {
+      showNotification('Please fill in all required fields', 'error');
+      return;
+    }
+    
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(data.email)) {
+      showNotification('Please enter a valid email address', 'error');
+      return;
+    }
+    
+    const submitBtn = contactForm.querySelector('.form-submit');
+    const originalHTML = submitBtn.innerHTML;
+    
+    submitBtn.innerHTML = '<span>Sending...</span>';
+    submitBtn.disabled = true;
+    
+    try {
+      const response = await fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        body: formData
+      });
+      
+      const result = await response.json();
+      
+      if (result.success) {
+        submitBtn.innerHTML = '<span>Message Sent! ✓</span>';
+        submitBtn.style.background = 'linear-gradient(135deg, #10b981, #059669)';
+        
+        showNotification('Thank you! I will get back to you soon.', 'success');
+        
+        setTimeout(() => {
+          contactForm.reset();
+          submitBtn.innerHTML = originalHTML;
+          submitBtn.disabled = false;
+          submitBtn.style.background = '';
+        }, 3000);
+      } else {
+        throw new Error('Submission failed');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      
+      submitBtn.innerHTML = '<span>Failed to Send ✗</span>';
+      submitBtn.style.background = 'linear-gradient(135deg, #ef4444, #dc2626)';
+      
+      showNotification('Oops! Something went wrong. Please try again.', 'error');
+      
+      setTimeout(() => {
+        submitBtn.innerHTML = originalHTML;
+        submitBtn.disabled = false;
+        submitBtn.style.background = '';
+      }, 4000);
+    }
+  });
+}
+
+// Notification System
+function showNotification(message, type = 'info') {
+  const existing = document.querySelector('.notification');
+  if (existing) existing.remove();
+  
+  const notification = document.createElement('div');
+  notification.className = `notification notification-${type}`;
+  notification.innerHTML = `
+    <div style="display: flex; align-items: center; gap: 12px;">
+      <span style="font-size: 20px;">
+        ${type === 'success' ? '✓' : type === 'error' ? '✗' : 'ℹ'}
+      </span>
+      <span>${message}</span>
+    </div>
+  `;
+  
+  notification.style.cssText = `
+    position: fixed;
+    top: 100px;
+    right: 30px;
+    padding: 18px 26px;
+    background: ${type === 'success' ? 'linear-gradient(135deg, #10b981, #059669)' : 
+                  type === 'error' ? 'linear-gradient(135deg, #ef4444, #dc2626)' : 
+                  'linear-gradient(135deg, #6366f1, #8b5cf6)'};
+    color: white;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: 500;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    z-index: 100001;
+    animation: slideIn 0.4s ease;
+    max-width: 400px;
+    cursor: pointer;
+  `;
+  
+  document.body.appendChild(notification);
+  
+  setTimeout(() => {
+    notification.style.animation = 'slideOut 0.4s ease';
+    setTimeout(() => notification.remove(), 400);
+  }, 5000);
+  
+  notification.addEventListener('click', () => notification.remove());
+}
+
+// Add animations
+const style = document.createElement('style');
+style.textContent = `
+  @keyframes slideIn {
+    from { transform: translateX(450px); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+  }
+  @keyframes slideOut {
+    from { transform: translateX(0); opacity: 1; }
+    to { transform: translateX(450px); opacity: 0; }
+  }
+`;
+document.head.appendChild(style);
