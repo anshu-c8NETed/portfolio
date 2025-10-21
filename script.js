@@ -30,7 +30,8 @@ class Particle {
 }
 
 const particles = [];
-for (let i = 0; i < 50; i++) {
+const particleCount = window.innerWidth < 768 ? 15 : 50; // Reduce particles on mobile
+for (let i = 0; i < particleCount; i++) {
   particles.push(new Particle());
 }
 
@@ -64,6 +65,15 @@ animateParticles();
 window.addEventListener('resize', () => {
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
+  
+  // Adjust particle count on resize
+  const newParticleCount = window.innerWidth < 768 ? 15 : 50;
+  if (particles.length !== newParticleCount) {
+    particles.length = 0;
+    for (let i = 0; i < newParticleCount; i++) {
+      particles.push(new Particle());
+    }
+  }
 });
 
 let scroll;
@@ -88,9 +98,12 @@ document.addEventListener('DOMContentLoaded', function() {
     scroll.update();
   });
 
-  setTimeout(() => {
-    firstPageAnim();
-  }, 100);
+  // Listen for loader complete event
+  window.addEventListener('loaderComplete', () => {
+    setTimeout(() => {
+      firstPageAnim();
+    }, 100);
+  });
 });
 
 function firstPageAnim() {
@@ -113,7 +126,17 @@ function firstPageAnim() {
     opacity: 0,
     duration: 1,
     ease: "power3.out",
-  }, "-=0.5");
+  }, "-=0.5")
+  .set("#herofooter", {
+    clearProps: "all"
+  });
+  
+  // Force Locomotive Scroll to update after animations
+  setTimeout(() => {
+    if (scroll) {
+      scroll.update();
+    }
+  }, 100);
 }
 
 const cursorFollower = document.querySelector("#cursor-follower");
@@ -312,9 +335,6 @@ function updateTime() {
 
 updateTime();
 setInterval(updateTime, 60000); 
-
-// REMOVED PARALLAX CODE - IT WAS CAUSING THE COLLAPSING ISSUE
-// Locomotive Scroll handles smooth scrolling without extra transforms
 
 gsap.to('.gradient-text', {
   backgroundPosition: '200% center',
