@@ -1,81 +1,168 @@
+// ====== UNIQUE 3D FLOATING SHAPES BACKGROUND ======
 const canvas = document.getElementById('bg-canvas');
 const ctx = canvas.getContext('2d');
 
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
-class Particle {
+class FloatingShape {
   constructor() {
     this.x = Math.random() * canvas.width;
     this.y = Math.random() * canvas.height;
-    this.size = Math.random() * 2 + 1;
-    this.speedX = Math.random() * 0.5 - 0.25;
-    this.speedY = Math.random() * 0.5 - 0.25;
+    this.size = Math.random() * 60 + 40;
+    this.speedX = (Math.random() - 0.5) * 0.5;
+    this.speedY = (Math.random() - 0.5) * 0.5;
+    this.rotation = Math.random() * Math.PI * 2;
+    this.rotationSpeed = (Math.random() - 0.5) * 0.02;
+    this.type = Math.floor(Math.random() * 4); // 4 different shapes
+    this.opacity = Math.random() * 0.3 + 0.1;
+    this.pulseSpeed = Math.random() * 0.02 + 0.01;
+    this.pulsePhase = Math.random() * Math.PI * 2;
   }
 
   update() {
     this.x += this.speedX;
     this.y += this.speedY;
+    this.rotation += this.rotationSpeed;
+    this.pulsePhase += this.pulseSpeed;
 
-    if (this.x > canvas.width || this.x < 0) this.speedX *= -1;
-    if (this.y > canvas.height || this.y < 0) this.speedY *= -1;
+    // Bounce off edges
+    if (this.x > canvas.width + 50 || this.x < -50) this.speedX *= -1;
+    if (this.y > canvas.height + 50 || this.y < -50) this.speedY *= -1;
   }
 
   draw() {
-    ctx.fillStyle = 'rgba(99, 102, 241, 0.8)';
+    ctx.save();
+    ctx.translate(this.x, this.y);
+    ctx.rotate(this.rotation);
+    
+    const pulse = Math.sin(this.pulsePhase) * 0.2 + 1;
+    const size = this.size * pulse;
+    
+    // Create gradient for each shape
+    const gradient = ctx.createRadialGradient(0, 0, 0, 0, 0, size);
+    gradient.addColorStop(0, `rgba(99, 102, 241, ${this.opacity})`);
+    gradient.addColorStop(0.5, `rgba(139, 92, 246, ${this.opacity * 0.5})`);
+    gradient.addColorStop(1, `rgba(236, 72, 153, 0)`);
+    
+    ctx.fillStyle = gradient;
+    ctx.strokeStyle = `rgba(99, 102, 241, ${this.opacity * 0.5})`;
+    ctx.lineWidth = 2;
+
     ctx.beginPath();
-    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+    
+    switch(this.type) {
+      case 0: // Triangle
+        ctx.moveTo(0, -size / 2);
+        ctx.lineTo(-size / 2, size / 2);
+        ctx.lineTo(size / 2, size / 2);
+        ctx.closePath();
+        break;
+      case 1: // Square
+        ctx.rect(-size / 2, -size / 2, size, size);
+        break;
+      case 2: // Hexagon
+        for (let i = 0; i < 6; i++) {
+          const angle = (Math.PI / 3) * i;
+          const x = Math.cos(angle) * size / 2;
+          const y = Math.sin(angle) * size / 2;
+          if (i === 0) ctx.moveTo(x, y);
+          else ctx.lineTo(x, y);
+        }
+        ctx.closePath();
+        break;
+      case 3: // Star
+        for (let i = 0; i < 5; i++) {
+          const angle = (Math.PI * 2 / 5) * i - Math.PI / 2;
+          const x = Math.cos(angle) * size / 2;
+          const y = Math.sin(angle) * size / 2;
+          if (i === 0) ctx.moveTo(x, y);
+          else ctx.lineTo(x, y);
+          
+          const innerAngle = angle + Math.PI / 5;
+          const innerX = Math.cos(innerAngle) * size / 4;
+          const innerY = Math.sin(innerAngle) * size / 4;
+          ctx.lineTo(innerX, innerY);
+        }
+        ctx.closePath();
+        break;
+    }
+    
     ctx.fill();
+    ctx.stroke();
+    ctx.restore();
   }
 }
 
-const particles = [];
-const particleCount = window.innerWidth < 768 ? 15 : 50; // Reduce particles on mobile
-for (let i = 0; i < particleCount; i++) {
-  particles.push(new Particle());
+const shapes = [];
+const shapeCount = window.innerWidth < 768 ? 8 : 15;
+for (let i = 0; i < shapeCount; i++) {
+  shapes.push(new FloatingShape());
 }
 
-function animateParticles() {
+let mouseX = canvas.width / 2;
+let mouseY = canvas.height / 2;
+
+document.addEventListener('mousemove', (e) => {
+  mouseX = e.clientX;
+  mouseY = e.clientY;
+});
+
+function animateShapes() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   
-  for (let i = 0; i < particles.length; i++) {
-    particles[i].update();
-    particles[i].draw();
+  // Draw connections between nearby shapes
+  for (let i = 0; i < shapes.length; i++) {
+    shapes[i].update();
     
-    for (let j = i + 1; j < particles.length; j++) {
-      const dx = particles[i].x - particles[j].x;
-      const dy = particles[i].y - particles[j].y;
+    for (let j = i + 1; j < shapes.length; j++) {
+      const dx = shapes[i].x - shapes[j].x;
+      const dy = shapes[i].y - shapes[j].y;
       const distance = Math.sqrt(dx * dx + dy * dy);
       
-      if (distance < 100) {
-        ctx.strokeStyle = `rgba(99, 102, 241, ${0.2 - distance / 500})`;
+      if (distance < 200) {
+        ctx.strokeStyle = `rgba(139, 92, 246, ${0.15 * (1 - distance / 200)})`;
         ctx.lineWidth = 1;
         ctx.beginPath();
-        ctx.moveTo(particles[i].x, particles[i].y);
-        ctx.lineTo(particles[j].x, particles[j].y);
+        ctx.moveTo(shapes[i].x, shapes[i].y);
+        ctx.lineTo(shapes[j].x, shapes[j].y);
         ctx.stroke();
       }
     }
+    
+    // Mouse interaction - shapes move away from cursor
+    const dxMouse = shapes[i].x - mouseX;
+    const dyMouse = shapes[i].y - mouseY;
+    const distanceToMouse = Math.sqrt(dxMouse * dxMouse + dyMouse * dyMouse);
+    
+    if (distanceToMouse < 150) {
+      const force = (150 - distanceToMouse) / 150;
+      shapes[i].x += (dxMouse / distanceToMouse) * force * 2;
+      shapes[i].y += (dyMouse / distanceToMouse) * force * 2;
+    }
+    
+    shapes[i].draw();
   }
-  requestAnimationFrame(animateParticles);
+  
+  requestAnimationFrame(animateShapes);
 }
 
-animateParticles();
+animateShapes();
 
 window.addEventListener('resize', () => {
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
   
-  // Adjust particle count on resize
-  const newParticleCount = window.innerWidth < 768 ? 15 : 50;
-  if (particles.length !== newParticleCount) {
-    particles.length = 0;
-    for (let i = 0; i < newParticleCount; i++) {
-      particles.push(new Particle());
+  const newShapeCount = window.innerWidth < 768 ? 8 : 15;
+  if (shapes.length !== newShapeCount) {
+    shapes.length = 0;
+    for (let i = 0; i < newShapeCount; i++) {
+      shapes.push(new FloatingShape());
     }
   }
 });
 
+// ====== LOCOMOTIVE SCROLL SETUP ======
 let scroll;
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -98,7 +185,6 @@ document.addEventListener('DOMContentLoaded', function() {
     scroll.update();
   });
 
-  // Listen for loader complete event
   window.addEventListener('loaderComplete', () => {
     setTimeout(() => {
       firstPageAnim();
@@ -131,7 +217,6 @@ function firstPageAnim() {
     clearProps: "all"
   });
   
-  // Force Locomotive Scroll to update after animations
   setTimeout(() => {
     if (scroll) {
       scroll.update();
@@ -139,18 +224,35 @@ function firstPageAnim() {
   }, 100);
 }
 
+// ====== ENHANCED MAGNETIC CURSOR WITH RIPPLES ======
 const cursorFollower = document.querySelector("#cursor-follower");
-let mouseX = 0, mouseY = 0;
+let cursorX = 0, cursorY = 0;
 let followerX = 0, followerY = 0;
+const ripples = [];
 
 document.addEventListener("mousemove", (e) => {
-  mouseX = e.clientX;
-  mouseY = e.clientY;
+  cursorX = e.clientX;
+  cursorY = e.clientY;
+  
+  // Create ripple effect occasionally
+  if (Math.random() > 0.95) {
+    createRipple(e.clientX, e.clientY);
+  }
 });
 
+function createRipple(x, y) {
+  const ripple = document.createElement('div');
+  ripple.className = 'cursor-ripple';
+  ripple.style.left = x + 'px';
+  ripple.style.top = y + 'px';
+  document.body.appendChild(ripple);
+  
+  setTimeout(() => ripple.remove(), 1000);
+}
+
 function animateFollower() {
-  followerX += (mouseX - followerX) * 0.1;
-  followerY += (mouseY - followerY) * 0.1;
+  followerX += (cursorX - followerX) * 0.15;
+  followerY += (cursorY - followerY) * 0.15;
   
   if (cursorFollower) {
     cursorFollower.style.transform = `translate(${followerX - 10}px, ${followerY - 10}px)`;
@@ -161,11 +263,13 @@ function animateFollower() {
 
 animateFollower();
 
-document.querySelectorAll('a, .elem, .skill-card').forEach(elem => {
+// Enhanced cursor interactions
+document.querySelectorAll('a, .elem, .skill-card, .menu-btn').forEach(elem => {
   elem.addEventListener('mouseenter', () => {
     if (cursorFollower) {
       gsap.to(cursorFollower, {
-        scale: 1.5,
+        scale: 2,
+        backgroundColor: 'rgba(99, 102, 241, 0.3)',
         duration: 0.3,
         ease: "power2.out"
       });
@@ -176,6 +280,7 @@ document.querySelectorAll('a, .elem, .skill-card').forEach(elem => {
     if (cursorFollower) {
       gsap.to(cursorFollower, {
         scale: 1,
+        backgroundColor: 'transparent',
         duration: 0.3,
         ease: "power2.out"
       });
@@ -183,6 +288,7 @@ document.querySelectorAll('a, .elem, .skill-card').forEach(elem => {
   });
 });
 
+// ====== MENU FUNCTIONALITY ======
 const menuBtn = document.querySelector('.menu-btn');
 const dropdownMenu = document.getElementById('dropdown-menu');
 const closeMenuBtn = document.querySelector('.close-menu');
@@ -245,6 +351,7 @@ document.addEventListener('keydown', (e) => {
   }
 });
 
+// ====== PROJECT HOVER EFFECTS ======
 document.querySelectorAll(".elem").forEach(function (elem) {
   const img = elem.querySelector("img");
   let rotate = 0;
@@ -278,6 +385,7 @@ document.querySelectorAll(".elem").forEach(function (elem) {
   });
 });
 
+// ====== SKILL CARDS ANIMATION ======
 if (typeof IntersectionObserver !== 'undefined') {
   const skillObserver = new IntersectionObserver((entries) => {
     entries.forEach((entry, index) => {
@@ -287,7 +395,7 @@ if (typeof IntersectionObserver !== 'undefined') {
           y: 0,
           duration: 0.8,
           delay: index * 0.1,
-          ease: "power3.out"
+          ease: "back.out(1.7)"
         });
         skillObserver.unobserve(entry.target);
       }
@@ -300,6 +408,7 @@ if (typeof IntersectionObserver !== 'undefined') {
   });
 }
 
+// ====== SMOOTH SCROLL ANCHORS ======
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
   anchor.addEventListener('click', function (e) {
     if (this.classList.contains('menu-link')) {
@@ -318,6 +427,7 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
   });
 });
 
+// ====== TIME UPDATE ======
 function updateTime() {
   const now = new Date();
   const timeString = now.toLocaleTimeString('en-IN', {
@@ -334,8 +444,9 @@ function updateTime() {
 }
 
 updateTime();
-setInterval(updateTime, 60000); 
+setInterval(updateTime, 60000);
 
+// ====== GRADIENT TEXT ANIMATION ======
 gsap.to('.gradient-text', {
   backgroundPosition: '200% center',
   duration: 3,
@@ -344,6 +455,7 @@ gsap.to('.gradient-text', {
   yoyo: true
 });
 
+// ====== PROJECT CARDS SCROLL ANIMATION ======
 if (typeof IntersectionObserver !== 'undefined') {
   const projectObserver = new IntersectionObserver((entries) => {
     entries.forEach((entry) => {
@@ -364,6 +476,7 @@ if (typeof IntersectionObserver !== 'undefined') {
   });
 }
 
+// ====== ABOUT SECTION ANIMATION ======
 if (typeof IntersectionObserver !== 'undefined') {
   const aboutObserver = new IntersectionObserver((entries) => {
     entries.forEach((entry) => {
@@ -395,6 +508,7 @@ if (typeof IntersectionObserver !== 'undefined') {
   }
 }
 
+// ====== PROJECT LINKS ======
 document.querySelectorAll(".elem").forEach(function (elem) {
   elem.addEventListener("click", function() {
     const projectTitle = elem.querySelector("h1");
