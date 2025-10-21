@@ -1,12 +1,23 @@
-// Loading Screen Controller
+// ====== ENHANCED LOADING SCREEN CONTROLLER ======
 class LoaderController {
   constructor() {
     this.loaderWrapper = document.getElementById('loader-wrapper');
     this.loaderProgress = document.querySelector('.loader-progress');
     this.loaderPercentage = document.querySelector('.loader-percentage');
+    this.loaderText = document.querySelector('.loader-text');
     this.progress = 0;
     this.targetProgress = 0;
     this.isComplete = false;
+    this.resources = [];
+    this.loadedResources = 0;
+    
+    this.loadingTexts = [
+      'Loading Experience...',
+      'Preparing Portfolio...',
+      'Almost There...',
+      'Getting Ready...'
+    ];
+    this.textIndex = 0;
     
     this.init();
   }
@@ -19,30 +30,61 @@ class LoaderController {
     const main = document.getElementById('main');
     if (main) {
       main.style.opacity = '0';
+      main.style.visibility = 'hidden';
     }
     
-    // Start loading simulation
+    // Start loading sequence
+    this.detectResources();
     this.simulateLoading();
-    
-    // Monitor actual page load
     this.monitorPageLoad();
-    
-    // Animate progress bar smoothly
     this.animateProgress();
+    this.startTextRotation();
+    this.animateLetters();
+  }
+
+  // Detect all resources to load
+  detectResources() {
+    // Get all images
+    const images = document.querySelectorAll('img');
+    images.forEach(img => {
+      if (img.complete) {
+        this.loadedResources++;
+      } else {
+        this.resources.push(img);
+        img.addEventListener('load', () => this.onResourceLoad());
+        img.addEventListener('error', () => this.onResourceLoad());
+      }
+    });
+
+    // Add main scripts and stylesheets
+    this.resources.push(...document.querySelectorAll('link[rel="stylesheet"]'));
+    this.resources.push(...document.querySelectorAll('script[src]'));
+    
+    // If no resources to load, set minimum time
+    if (this.resources.length === 0) {
+      this.targetProgress = 50;
+    }
+  }
+
+  onResourceLoad() {
+    this.loadedResources++;
+    const resourceProgress = (this.loadedResources / this.resources.length) * 70;
+    this.targetProgress = Math.min(90, resourceProgress);
   }
 
   simulateLoading() {
-    // Faster loading simulation
+    // Smooth loading simulation with realistic timing
     const loadingSteps = [
-      { progress: 30, delay: 200 },
-      { progress: 50, delay: 400 },
-      { progress: 70, delay: 600 },
-      { progress: 90, delay: 800 }
+      { progress: 20, delay: 100 },
+      { progress: 35, delay: 300 },
+      { progress: 50, delay: 500 },
+      { progress: 65, delay: 700 },
+      { progress: 80, delay: 900 }
     ];
 
     loadingSteps.forEach(step => {
       setTimeout(() => {
-        if (!this.isComplete) {
+        if (!this.isComplete && this.targetProgress < step.progress) {
           this.targetProgress = step.progress;
         }
       }, step.delay);
@@ -50,28 +92,32 @@ class LoaderController {
   }
 
   monitorPageLoad() {
-    // Wait for all resources to load
     const checkLoadComplete = () => {
-      if (document.readyState === 'complete') {
-        // Shorter minimum loading time
+      const state = document.readyState;
+      
+      if (state === 'interactive') {
+        this.targetProgress = Math.max(this.targetProgress, 70);
+      }
+      
+      if (state === 'complete') {
+        // Minimum loading time for smooth experience
         setTimeout(() => {
           this.completeLoading();
-        }, 1000);
+        }, 800);
       } else {
-        setTimeout(checkLoadComplete, 100);
+        setTimeout(checkLoadComplete, 50);
       }
     };
 
-    // Start checking
     if (document.readyState === 'complete') {
       setTimeout(() => {
         this.completeLoading();
-      }, 1000);
+      }, 800);
     } else {
       window.addEventListener('load', () => {
         setTimeout(() => {
           this.completeLoading();
-        }, 500);
+        }, 600);
       });
       checkLoadComplete();
     }
@@ -80,8 +126,9 @@ class LoaderController {
   animateProgress() {
     const animate = () => {
       if (!this.isComplete) {
-        // Smooth progress animation
-        this.progress += (this.targetProgress - this.progress) * 0.1;
+        // Ultra-smooth easing
+        const ease = 0.08;
+        this.progress += (this.targetProgress - this.progress) * ease;
         
         // Update UI
         this.updateProgressBar(Math.floor(this.progress));
@@ -103,22 +150,66 @@ class LoaderController {
     }
   }
 
+  startTextRotation() {
+    if (!this.loaderText) return;
+    
+    this.textInterval = setInterval(() => {
+      if (this.isComplete) {
+        clearInterval(this.textInterval);
+        return;
+      }
+      
+      this.textIndex = (this.textIndex + 1) % this.loadingTexts.length;
+      
+      // Fade out
+      this.loaderText.style.opacity = '0';
+      this.loaderText.style.transform = 'translateY(10px)';
+      
+      setTimeout(() => {
+        this.loaderText.textContent = this.loadingTexts[this.textIndex];
+        // Fade in
+        this.loaderText.style.opacity = '1';
+        this.loaderText.style.transform = 'translateY(0)';
+      }, 300);
+    }, 2500);
+  }
+
+  animateLetters() {
+    const letters = document.querySelectorAll('.loader-letter');
+    letters.forEach((letter, index) => {
+      setTimeout(() => {
+        letter.style.opacity = '1';
+        letter.style.transform = 'translateY(0)';
+      }, index * 100);
+    });
+  }
+
   completeLoading() {
     if (this.isComplete) return;
     
     this.isComplete = true;
     this.targetProgress = 100;
     
-    // Animate to 100%
+    // Clear text interval
+    if (this.textInterval) {
+      clearInterval(this.textInterval);
+    }
+    
+    // Final loading text
+    if (this.loaderText) {
+      this.loaderText.textContent = 'Welcome!';
+    }
+    
+    // Animate to 100% with perfect easing
     const finalAnimation = () => {
-      this.progress += (100 - this.progress) * 0.15;
+      this.progress += (100 - this.progress) * 0.12;
       this.updateProgressBar(Math.floor(this.progress));
       
-      if (this.progress < 99.5) {
+      if (this.progress < 99.8) {
         requestAnimationFrame(finalAnimation);
       } else {
         this.updateProgressBar(100);
-        this.hideLoader();
+        setTimeout(() => this.hideLoader(), 400);
       }
     };
     
@@ -126,81 +217,51 @@ class LoaderController {
   }
 
   hideLoader() {
+    // Fade out loader with smooth animation
+    if (this.loaderWrapper) {
+      this.loaderWrapper.classList.add('fade-out');
+    }
+    
+    // Remove loader and show content
     setTimeout(() => {
-      // Add fade out class
       if (this.loaderWrapper) {
-        this.loaderWrapper.classList.add('fade-out');
+        this.loaderWrapper.style.display = 'none';
       }
       
-      // Remove loader after animation
-      setTimeout(() => {
-        if (this.loaderWrapper) {
-          this.loaderWrapper.style.display = 'none';
-        }
-        
-        // Re-enable scrolling
-        document.body.style.overflow = '';
-        
-        // Show main content with smooth transition
-        const main = document.getElementById('main');
-        if (main) {
-          main.style.transition = 'opacity 0.5s ease';
-          main.style.opacity = '1';
-        }
-        
-        // Trigger page animations after content is visible
-        this.triggerPageAnimations();
-      }, 800);
-    }, 500);
+      // Re-enable scrolling
+      document.body.style.overflow = '';
+      
+      // Show main content with staggered fade-in
+      const main = document.getElementById('main');
+      if (main) {
+        main.style.visibility = 'visible';
+        main.style.transition = 'opacity 0.6s ease';
+        main.style.opacity = '1';
+      }
+      
+      // Trigger page animations
+      this.triggerPageAnimations();
+    }, 900);
   }
 
   triggerPageAnimations() {
-    // Dispatch custom event
+    // Dispatch custom event for other scripts
     window.dispatchEvent(new CustomEvent('loaderComplete'));
     
-    // Wait for DOM to be ready, then trigger animations
+    // Small delay to ensure smooth transition
     setTimeout(() => {
       if (typeof firstPageAnim === 'function') {
         firstPageAnim();
       }
-    }, 500);
+    }, 200);
   }
 }
 
-// Initialize loader when DOM is ready
+// Initialize loader
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', () => {
     new LoaderController();
   });
 } else {
   new LoaderController();
-}
-
-// Optional: Add loading text variations
-const loadingTexts = [
-  'Loading Experience...',
-  'Preparing Portfolio...',
-  'Almost There...',
-  'Getting Ready...'
-];
-
-let textIndex = 0;
-const loaderText = document.querySelector('.loader-text');
-
-if (loaderText) {
-  const textInterval = setInterval(() => {
-    textIndex = (textIndex + 1) % loadingTexts.length;
-    loaderText.style.opacity = '0';
-    loaderText.style.transition = 'opacity 0.3s ease';
-    
-    setTimeout(() => {
-      loaderText.textContent = loadingTexts[textIndex];
-      loaderText.style.opacity = '1';
-    }, 300);
-  }, 2000);
-  
-  // Clear interval when loader completes
-  window.addEventListener('loaderComplete', () => {
-    clearInterval(textInterval);
-  });
 }
