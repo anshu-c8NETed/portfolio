@@ -71,7 +71,6 @@ body {
   background: rgba(10, 10, 10, 0.5);
   border-bottom: 1px solid var(--border-color);
 }
-
 .logo-link {
   position: relative;
   text-decoration: none;
@@ -381,6 +380,9 @@ body {
   align-items: center;
   justify-content: space-between;
   gap: 20px;
+  position: relative;
+  z-index: 10;
+  will-change: transform;
 }
 
 .cta-btn, .scroll-indicator {
