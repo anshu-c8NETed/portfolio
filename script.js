@@ -95,7 +95,7 @@ class FloatingShape {
 }
 
 const shapes = [];
-const shapeCount = window.innerWidth < 768 ? 8 : 15;
+const shapeCount = window.innerWidth < 768 ? 5 : 10;
 for (let i = 0; i < shapeCount; i++) {
   shapes.push(new FloatingShape());
 }
@@ -111,26 +111,27 @@ document.addEventListener('mousemove', (e) => {
 function animateShapes() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   
-  // Draw connections between nearby shapes
   for (let i = 0; i < shapes.length; i++) {
     shapes[i].update();
     
-    for (let j = i + 1; j < shapes.length; j++) {
-      const dx = shapes[i].x - shapes[j].x;
-      const dy = shapes[i].y - shapes[j].y;
-      const distance = Math.sqrt(dx * dx + dy * dy);
-      
-      if (distance < 200) {
-        ctx.strokeStyle = `rgba(139, 92, 246, ${0.15 * (1 - distance / 200)})`;
-        ctx.lineWidth = 1;
-        ctx.beginPath();
-        ctx.moveTo(shapes[i].x, shapes[i].y);
-        ctx.lineTo(shapes[j].x, shapes[j].y);
-        ctx.stroke();
+    if (i % 2 === 0) {
+      for (let j = i + 1; j < shapes.length; j++) {
+        const dx = shapes[i].x - shapes[j].x;
+        const dy = shapes[i].y - shapes[j].y;
+        const distanceSquared = dx * dx + dy * dy;
+        
+        if (distanceSquared < 40000) {
+          const distance = Math.sqrt(distanceSquared);
+          ctx.strokeStyle = `rgba(139, 92, 246, ${0.15 * (1 - distance / 200)})`;
+          ctx.lineWidth = 1;
+          ctx.beginPath();
+          ctx.moveTo(shapes[i].x, shapes[i].y);
+          ctx.lineTo(shapes[j].x, shapes[j].y);
+          ctx.stroke();
+        }
       }
     }
     
-    // Mouse interaction - shapes move away from cursor
     const dxMouse = shapes[i].x - mouseX;
     const dyMouse = shapes[i].y - mouseY;
     const distanceToMouse = Math.sqrt(dxMouse * dxMouse + dyMouse * dyMouse);
@@ -149,17 +150,22 @@ function animateShapes() {
 
 animateShapes();
 
+let resizeTimeout;
 window.addEventListener('resize', () => {
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
+  if (resizeTimeout) clearTimeout(resizeTimeout);
   
-  const newShapeCount = window.innerWidth < 768 ? 8 : 15;
-  if (shapes.length !== newShapeCount) {
-    shapes.length = 0;
-    for (let i = 0; i < newShapeCount; i++) {
-      shapes.push(new FloatingShape());
+  resizeTimeout = setTimeout(() => {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    
+    const newShapeCount = window.innerWidth < 768 ? 5 : 10;
+    if (shapes.length !== newShapeCount) {
+      shapes.length = 0;
+      for (let i = 0; i < newShapeCount; i++) {
+        shapes.push(new FloatingShape());
+      }
     }
-  }
+  }, 200);
 });
 
 // ====== LOCOMOTIVE SCROLL SETUP ======
@@ -228,13 +234,11 @@ function firstPageAnim() {
 const cursorFollower = document.querySelector("#cursor-follower");
 let cursorX = 0, cursorY = 0;
 let followerX = 0, followerY = 0;
-const ripples = [];
 
 document.addEventListener("mousemove", (e) => {
   cursorX = e.clientX;
   cursorY = e.clientY;
   
-  // Create ripple effect occasionally
   if (Math.random() > 0.95) {
     createRipple(e.clientX, e.clientY);
   }
@@ -263,7 +267,6 @@ function animateFollower() {
 
 animateFollower();
 
-// Enhanced cursor interactions
 document.querySelectorAll('a, .elem, .skill-card, .menu-btn').forEach(elem => {
   elem.addEventListener('mouseenter', () => {
     if (cursorFollower) {
@@ -443,9 +446,6 @@ function updateTime() {
   }
 }
 
-updateTime();
-setInterval(updateTime, 60000);
-
 // ====== GRADIENT TEXT ANIMATION ======
 gsap.to('.gradient-text', {
   backgroundPosition: '200% center',
@@ -508,18 +508,22 @@ if (typeof IntersectionObserver !== 'undefined') {
   }
 }
 
-// ====== PROJECT LINKS ======
 document.querySelectorAll(".elem").forEach(function (elem) {
   elem.addEventListener("click", function() {
     const projectTitle = elem.querySelector("h1");
     if (projectTitle) {
       const title = projectTitle.textContent.trim();
       
-      if (title === "SHANSCAFE") {
-        window.open("https://shanscafe.netlify.app/", "_blank");
-      } else if (title === "PINSPIRE") {
+      // Full-Stack Projects
+      if (title === "CHESSELITE") {
+        window.open("https://chess-production-5218.up.railway.app/", "_blank");
+      } else if (title === "PINSPIE") {
         window.open("https://your-pinspire-url.com/", "_blank");
-      } else if (title === "NEXUS") {
+      } else if (title === "SHANSCAFE") {
+        window.open("https://shanscafe.netlify.app/", "_blank");
+      } 
+      // Agency Projects
+      else if (title === "NEXUS") {
         window.open("https://nexusonweb.netlify.app/", "_blank");
       } else if (title === "LAZAREV.") {
         window.open("https://lazarevdigital.netlify.app/", "_blank");
@@ -542,7 +546,6 @@ if (contactForm) {
     const formData = new FormData(contactForm);
     const data = Object.fromEntries(formData);
     
-    // Validation
     if (!data.name || !data.email || !data.message) {
       showNotification('Please fill in all required fields', 'error');
       return;
@@ -600,7 +603,6 @@ if (contactForm) {
   });
 }
 
-// Notification System
 function showNotification(message, type = 'info') {
   const existing = document.querySelector('.notification');
   if (existing) existing.remove();
@@ -645,7 +647,6 @@ function showNotification(message, type = 'info') {
   notification.addEventListener('click', () => notification.remove());
 }
 
-// Add animations
 const style = document.createElement('style');
 style.textContent = `
   @keyframes slideIn {
