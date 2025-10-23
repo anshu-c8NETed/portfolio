@@ -430,27 +430,39 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
   });
 });
 
-// ====== TIME UPDATE ======
+// ====== DYNAMIC TIME UPDATE ======
 function updateTime() {
   const now = new Date();
-
+  
+  // Format: 12:05 AM IST
   const timeString = now.toLocaleTimeString('en-IN', {
     hour: 'numeric',
     minute: '2-digit',
-    second: '2-digit', // optional, but adds seconds
     hour12: true,
     timeZone: 'Asia/Kolkata',
   }) + ' IST';
 
   const timeElement = document.getElementById('current-time');
   if (timeElement) {
-    timeElement.textContent = timeString;
+    // Force DOM update
+    timeElement.innerHTML = timeString;
   }
 }
 
-// Call immediately and update every second
-updateTime();
-setInterval(updateTime, 1000);
+// Initialize immediately
+document.addEventListener('DOMContentLoaded', updateTime);
+
+// Update every minute for better performance
+setInterval(updateTime, 60000);
+
+// Update when page becomes visible
+if (typeof document.hidden !== "undefined") {
+  document.addEventListener('visibilitychange', function() {
+    if (!document.hidden) {
+      updateTime();
+    }
+  });
+}
 
 
 // ====== GRADIENT TEXT ANIMATION ======
@@ -666,4 +678,5 @@ style.textContent = `
   }
 `;
 document.head.appendChild(style);
+
 
