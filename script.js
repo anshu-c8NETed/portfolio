@@ -433,18 +433,25 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 // ====== TIME UPDATE ======
 function updateTime() {
   const now = new Date();
+
   const timeString = now.toLocaleTimeString('en-IN', {
     hour: 'numeric',
     minute: '2-digit',
+    second: '2-digit', // optional, but adds seconds
     hour12: true,
-    timeZone: 'Asia/Kolkata'
+    timeZone: 'Asia/Kolkata',
   }) + ' IST';
-  
+
   const timeElement = document.getElementById('current-time');
   if (timeElement) {
     timeElement.textContent = timeString;
   }
 }
+
+// Call immediately and update every second
+updateTime();
+setInterval(updateTime, 1000);
+
 
 // ====== GRADIENT TEXT ANIMATION ======
 gsap.to('.gradient-text', {
@@ -659,3 +666,4 @@ style.textContent = `
   }
 `;
 document.head.appendChild(style);
+
