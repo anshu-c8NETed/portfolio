@@ -50,9 +50,9 @@ body {
   left: 0;
   width: 100%;
   height: 100%;
-  z-index: 0;
-  pointer-events: none;
-  opacity: 1;
+  z-index: 0; /* CRITICAL: Behind everything */
+  pointer-events: none; /* Allow clicks to pass through */
+  opacity: 0.8; /* Slightly transparent so content is more visible */
 }
 
 /* Custom Cursor Styles */
@@ -1426,4 +1426,5 @@ a, button, input, textarea, select {
     padding: 25px;
   }
 }
+
 
