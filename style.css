@@ -43,7 +43,30 @@ body {
   font-family: 'Poppins', sans-serif;
   overflow-x: hidden;
 }
+/* Three.js Canvas */
+#three-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 1;
+}
 
+/* Custom Cursor Styles */
+#custom-cursor,
+#cursor-glow,
+#cursor-trail {
+  cursor: none !important;
+}
+
+/* Force hide default cursor everywhere */
+*, *::before, *::after,
+a, button, input, textarea, select {
+  cursor: none !important;
+}
 /* Scroll Progress Indicator */
 #scroll-progress {
   position: fixed;
@@ -76,16 +99,7 @@ body {
 
 /* Enhanced Cursor */
 #cursor-follower {
-  width: 20px;
-  height: 20px;
-  position: fixed;
-  z-index: 99999;
-  border-radius: 50%;
-  background: linear-gradient(135deg, var(--primary), var(--accent));
-  pointer-events: none;
-  transition: all 0.15s cubic-bezier(0.19, 1, 0.22, 1);
-  box-shadow: 0 0 20px rgba(99, 102, 241, 0.5);
-  mix-blend-mode: difference;
+  display: none; /* Disable old cursor */
 }
 
 .cursor-ripple {
@@ -1412,5 +1426,4 @@ body {
     padding: 25px;
   }
 }
-
 
