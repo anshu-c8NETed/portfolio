@@ -544,8 +544,8 @@ document.querySelectorAll(".elem").forEach(function (elem) {
       // Agency Projects
       else if (title === "NEXUS") {
         window.open("https://nexusonweb.netlify.app/", "_blank");
-      } else if (title === "LAZAREV.") {
-        window.open("https://lazarevdigital.netlify.app/", "_blank");
+      } else if (title === "UNIVERSE.") {
+        window.open("https://universemodern.netlify.app/", "_blank");
       } else if (title === "SUNSTUDIO") {
         window.open("https://sunstudioonweb.netlify.app/", "_blank");
       }
@@ -678,5 +678,6 @@ style.textContent = `
   }
 `;
 document.head.appendChild(style);
+
 
 
