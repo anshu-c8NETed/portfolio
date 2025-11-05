@@ -542,11 +542,16 @@ document.querySelectorAll(".elem").forEach(function (elem) {
         window.open("https://shanscafe.netlify.app/", "_blank");
       } 
       // Agency Projects
+      else if (title === "ZENTRY") {
+        window.open("https://animated-website-gilt-seven.vercel.app/", "_blank");
+      }
       else if (title === "NEXUS") {
         window.open("https://nexusonweb.netlify.app/", "_blank");
-      } else if (title === "UNIVERSE.") {
+      } 
+      else if (title === "UNIVERSE.") {
         window.open("https://universemodern.netlify.app/", "_blank");
-      } else if (title === "SUNSTUDIO") {
+      }
+      else if (title === "SUNSTUDIO") {
         window.open("https://sunstudioonweb.netlify.app/", "_blank");
       }
     }
@@ -678,6 +683,7 @@ style.textContent = `
   }
 `;
 document.head.appendChild(style);
+
 
 
 
