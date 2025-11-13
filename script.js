@@ -551,8 +551,8 @@ document.querySelectorAll(".elem").forEach(function (elem) {
       else if (title === "UNIVERSE.") {
         window.open("https://universemodern.netlify.app/", "_blank");
       }
-      else if (title === "SUNSTUDIO") {
-        window.open("https://sunstudioonweb.netlify.app/", "_blank");
+      else if (title === "QUANTUM") {
+        window.open("https://quantumagency.netlify.app/", "_blank");
       }
     }
   });
@@ -683,6 +683,7 @@ style.textContent = `
   }
 `;
 document.head.appendChild(style);
+
 
 
 
