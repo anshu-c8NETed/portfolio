@@ -539,7 +539,7 @@ document.querySelectorAll(".elem").forEach(function (elem) {
       } else if (title === "PINSPIE") {
         window.open("https://your-pinspire-url.com/", "_blank");
       } else if (title === "SHANSCAFE") {
-        window.open("https://shanscafe.netlify.app/", "_blank");
+        window.open("https://anshu-rajportfolio.netlify.app/", "_blank");
       } 
       // Agency Projects
       else if (title === "ZENTRY") {
@@ -683,6 +683,7 @@ style.textContent = `
   }
 `;
 document.head.appendChild(style);
+
 
 
 
