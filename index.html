@@ -27,27 +27,40 @@
      <canvas id="three-canvas"></canvas>
     <!-- Scroll Progress Indicator -->
     <div id="scroll-progress"></div>
+<!-- ====== REPLACE YOUR EXISTING LOADER HTML WITH THIS ====== -->
+<!-- Place this inside your <body> tag, before the main content -->
 
-    <!-- Loading Screen -->
-    <div id="loader-wrapper">
-      <div class="loader-container">
-        <div class="loader-content">
-          <div class="loader-logo">
-            <span class="loader-letter">A</span>
-            <span class="loader-letter">.</span>            
-            <span class="loader-letter">R</span>
-          </div>
-          <div class="loader-bar-container">
-            <div class="loader-bar">
-              <div class="loader-progress"></div>
-            </div>
-            <div class="loader-percentage">0%</div>
-          </div>
-          <div class="loader-text">Loading Experience...</div>
-        </div>
-        <div class="loader-particles"></div>
+<!-- Enhanced Agency-Level Loading Screen -->
+<div id="loader-wrapper">
+  <div class="loader-container">
+    <div class="loader-content">
+      
+      <!-- Animated Logo with Reveal Effect -->
+      <div class="loader-logo">
+        <span class="loader-letter" data-text="A">A</span>
+        <span class="loader-letter" data-text=".">.</span>
+        <span class="loader-letter" data-text="R">R</span>
       </div>
+      
+      <!-- Progress Bar with Advanced Styling -->
+      <div class="loader-bar-container">
+        <div class="loader-bar">
+          <div class="loader-progress"></div>
+        </div>
+        <div class="loader-percentage" data-percent="0%">0%</div>
+      </div>
+      
+      <!-- Dynamic Loading Text -->
+      <div class="loader-text">Initializing Experience...</div>
+      
     </div>
+    
+    <!-- Animated Particle Background -->
+    <div class="loader-particles"></div>
+  </div>
+</div>
+
+<!-- Your main content continues below -->
 
     <canvas id="bg-canvas"></canvas>
     <div id="cursor-follower"></div>
@@ -611,6 +624,7 @@
     </script>
   </body>
 </html>
+
 
 
 
