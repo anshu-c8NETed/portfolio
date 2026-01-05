@@ -548,8 +548,8 @@ document.querySelectorAll(".elem").forEach(function (elem) {
       else if (title === "GAMEBIT") {
         window.open("https://gamebitdev.netlify.app/", "_blank");
       } 
-      else if (title === "UNIVERSE.") {
-        window.open("https://universemodern.netlify.app/", "_blank");
+      else if (title === "HYPERSPACE RUSH") {
+        window.open("https://hyperspacerush.netlify.app/", "_blank");
       }
       else if (title === "SSS API LEARNING") {
         window.open("https://madeforsss.netlify.app/", "_blank");
@@ -683,6 +683,7 @@ style.textContent = `
   }
 `;
 document.head.appendChild(style);
+
 
 
 
