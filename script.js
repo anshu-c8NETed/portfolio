@@ -538,8 +538,8 @@ document.querySelectorAll(".elem").forEach(function (elem) {
         window.open("https://chess-production-5218.up.railway.app/", "_blank");
       } else if (title === "PINSPIE") {
         window.open("https://your-pinspire-url.com/", "_blank");
-      } else if (title === "SHANSCAFE") {
-        window.open("https://anshu-rajportfolio.netlify.app/", "_blank");
+      } else if (title === "CODEXSPACE") {
+        window.open("https://codex-space-frontend.vercel.app/", "_blank");
       } 
       // Agency Projects
       else if (title === "ZENTRY") {
@@ -683,6 +683,7 @@ style.textContent = `
   }
 `;
 document.head.appendChild(style);
+
 
 
 
