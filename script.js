@@ -535,7 +535,7 @@ document.querySelectorAll(".elem").forEach(function (elem) {
       
       // Full-Stack Projects
       if (title === "CHESSELITE") {
-        window.open("https://chess-production-5218.up.railway.app/", "_blank");
+        window.open("https://chess-fe9w.onrender.com/", "_blank");
       } else if (title === "PINSPIE") {
         window.open("https://your-pinspire-url.com/", "_blank");
       } else if (title === "CODEXSPACE") {
@@ -683,6 +683,7 @@ style.textContent = `
   }
 `;
 document.head.appendChild(style);
+
 
 
 
